@@ -1,4 +1,4 @@
-package com.rd.user_service;
+package com.rd.userservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
