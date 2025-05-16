@@ -1,6 +1,6 @@
 package com.rd.userservice.controller;
 
-import com.rd.userservice.UserRequest;
+import com.rd.userservice.dto.UserRequest;
 import com.rd.userservice.model.User;
 import com.rd.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,3 +1,3 @@
-package com.rd.userservice;
+package com.rd.userservice.dto;
 
 public record UserRequest (String name, String email, String favoriteGenre) {}
