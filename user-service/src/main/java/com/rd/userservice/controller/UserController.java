@@ -1,5 +1,6 @@
 package com.rd.userservice.controller;
 
+import com.rd.userservice.UserRequest;
 import com.rd.userservice.model.User;
 import com.rd.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,13 +20,23 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Create a new user")
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<User> create(@RequestBody UserRequest userRequest) {
+        User user = User.builder()
+                        .name(userRequest.name())
+                        .email(userRequest.email())
+                        .favoriteGenre(userRequest.favoriteGenre())
+                        .build();
         return ResponseEntity.ok(userService.save(user));
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
+    public User updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+        User user = User.builder()
+                        .id(id)
+                        .name(userRequest.name())
+                        .email(userRequest.email())
+                        .favoriteGenre(userRequest.favoriteGenre())
+                        .build();
         return userService.updateUser(user);
     }
 

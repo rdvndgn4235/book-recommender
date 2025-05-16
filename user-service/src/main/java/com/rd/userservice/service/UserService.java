@@ -1,5 +1,6 @@
 package com.rd.userservice.service;
 
+import com.rd.userservice.log.UserActionLogger;
 import com.rd.userservice.model.User;
 import com.rd.userservice.repository.UserRepository;
 import org.springframework.cache.annotation.CacheEvict;
@@ -14,19 +15,26 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
+    private final UserActionLogger userActionLogger;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       UserActionLogger userActionLogger) {
         this.userRepository = userRepository;
+        this.userActionLogger = userActionLogger;
     }
 
     @Override
     public User save(User user) {
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        userActionLogger.logAction("CREATE", savedUser.getId(), "System");
+        return savedUser;
     }
 
     @CachePut(value = "users", key = "#user.id")
     public User updateUser(User user) {
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        userActionLogger.logAction("UPDATE", savedUser.getId(), "System");
+        return savedUser;
     }
 
 
@@ -44,6 +52,7 @@ public class UserService implements IUserService {
     @CacheEvict(value = "users", key = "#id")
     @Override
     public void delete(Long id) {
+        userActionLogger.logAction("DELETE", id, "System");
         userRepository.deleteById(id);
     }
 

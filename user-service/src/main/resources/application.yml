@@ -2,10 +2,6 @@ server:
   port: 8081
 
 spring:
-#  security:
-#    user:
-#      name: admin
-#      password: admin
   datasource:
     url: jdbc:postgresql://localhost:5432/userdb
     username: postgres
@@ -26,4 +22,12 @@ spring:
     redis:
       host: localhost
       port: 6379
+    mongodb:
+      uri: mongodb://mongoadmin:secret@localhost:27017/user-logs-db?authSource=admin
+      database: user-logs-db
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
