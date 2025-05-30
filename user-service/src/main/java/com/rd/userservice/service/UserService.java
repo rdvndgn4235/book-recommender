@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,14 +21,13 @@ public class UserService implements IUserService {
     private final UserActionLogger userActionLogger;
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository,
-                       UserActionLogger userActionLogger,
-                       UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserActionLogger userActionLogger, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userActionLogger = userActionLogger;
         this.userMapper = userMapper;
     }
 
+    @Transactional
     @Override
     public UserDto save(User user) {
         User savedUser = userRepository.save(user);
@@ -35,7 +35,9 @@ public class UserService implements IUserService {
         return userMapper.toDto(savedUser);
     }
 
+    @Transactional
     @CachePut(value = "users", key = "#user.id")
+    @Override
     public UserDto updateUser(UserDto user) {
         User savedUser = userRepository.save(userMapper.toEntity(user));
         userActionLogger.logAction("UPDATE", savedUser.getId(), "System");
@@ -56,6 +58,7 @@ public class UserService implements IUserService {
         return userMapper.toDtoList(userRepository.findAll());
     }
 
+    @Transactional
     @CacheEvict(value = "users", key = "#id")
     @Override
     public void delete(Long id) {
@@ -64,6 +67,7 @@ public class UserService implements IUserService {
     }
 
     @CacheEvict(value = "users", allEntries = true)
+    @Override
     public void clearAllCache() {
         //sadece cache siler
     }
