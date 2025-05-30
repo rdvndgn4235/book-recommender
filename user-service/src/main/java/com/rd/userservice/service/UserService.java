@@ -6,6 +6,8 @@ import com.rd.userservice.log.UserActionLogger;
 import com.rd.userservice.mapper.UserMapper;
 import com.rd.userservice.model.User;
 import com.rd.userservice.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,6 +18,8 @@ import java.util.List;
 
 @Service
 public class UserService implements IUserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final UserActionLogger userActionLogger;
@@ -30,8 +34,10 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public UserDto save(User user) {
+        logger.info("Saving user: {}", user);
         User savedUser = userRepository.save(user);
         userActionLogger.logAction("CREATE", savedUser.getId(), "System");
+        logger.debug("User saved with id: {}", savedUser.getId());
         return userMapper.toDto(savedUser);
     }
 
