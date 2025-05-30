@@ -1,9 +1,11 @@
 package com.rd.userservice.controller;
 
+import com.rd.userservice.dto.UserDto;
 import com.rd.userservice.dto.UserRequest;
 import com.rd.userservice.model.User;
 import com.rd.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,37 +22,28 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Create a new user")
-    public ResponseEntity<User> create(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserDto> create(@Valid @RequestBody UserRequest userRequest) {
         User user = User.builder()
                         .name(userRequest.name())
                         .email(userRequest.email())
-                        .favoriteGenre(userRequest.favoriteGenre())
                         .build();
         return ResponseEntity.ok(userService.save(user));
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
-        User user = User.builder()
-                        .id(id)
-                        .name(userRequest.name())
-                        .email(userRequest.email())
-                        .favoriteGenre(userRequest.favoriteGenre())
-                        .build();
-        return userService.updateUser(user);
+    public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        return userService.updateUser(userDto);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID")
-    public ResponseEntity<User> getById(@PathVariable Long id) {
-        return userService.findById(id)
-                          .map(ResponseEntity::ok)
-                          .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<UserDto> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @GetMapping
     @Operation(summary = "Get all users")
-    public ResponseEntity<List<User>> getAll() {
+    public ResponseEntity<List<UserDto>> getAll() {
         return ResponseEntity.ok(userService.findAll());
     }
 

@@ -1,6 +1,9 @@
 package com.rd.userservice.service;
 
+import com.rd.userservice.dto.UserDto;
+import com.rd.userservice.exception.ResourceNotFoundException;
 import com.rd.userservice.log.UserActionLogger;
+import com.rd.userservice.mapper.UserMapper;
 import com.rd.userservice.model.User;
 import com.rd.userservice.repository.UserRepository;
 import org.springframework.cache.annotation.CacheEvict;
@@ -9,44 +12,48 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final UserActionLogger userActionLogger;
+    private final UserMapper userMapper;
 
     public UserService(UserRepository userRepository,
-                       UserActionLogger userActionLogger) {
+                       UserActionLogger userActionLogger,
+                       UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userActionLogger = userActionLogger;
+        this.userMapper = userMapper;
     }
 
     @Override
-    public User save(User user) {
+    public UserDto save(User user) {
         User savedUser = userRepository.save(user);
         userActionLogger.logAction("CREATE", savedUser.getId(), "System");
-        return savedUser;
+        return userMapper.toDto(savedUser);
     }
 
     @CachePut(value = "users", key = "#user.id")
-    public User updateUser(User user) {
-        User savedUser = userRepository.save(user);
+    public UserDto updateUser(UserDto user) {
+        User savedUser = userRepository.save(userMapper.toEntity(user));
         userActionLogger.logAction("UPDATE", savedUser.getId(), "System");
-        return savedUser;
+        return userMapper.toDto(savedUser);
     }
 
 
     @Cacheable(value = "users", key = "#id")
     @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public UserDto findById(Long id) {
+        User user = userRepository.findById(id)
+                                  .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        return userMapper.toDto(user);
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDto> findAll() {
+        return userMapper.toDtoList(userRepository.findAll());
     }
 
     @CacheEvict(value = "users", key = "#id")

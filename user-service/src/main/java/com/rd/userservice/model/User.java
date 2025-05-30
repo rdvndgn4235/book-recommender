@@ -40,9 +40,6 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(name = "favorite_genre")
-    private String favoriteGenre;
-
     private String role;
 
     @Override

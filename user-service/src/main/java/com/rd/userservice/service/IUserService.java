@@ -1,19 +1,19 @@
 package com.rd.userservice.service;
 
+import com.rd.userservice.dto.UserDto;
 import com.rd.userservice.model.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IUserService {
 
-    User save(User user);
+    UserDto save(User user);
 
-    User updateUser(User user);
+    UserDto updateUser(UserDto user);
 
-    Optional<User> findById(Long id);
+    UserDto findById(Long id);
 
-    List<User> findAll();
+    List<UserDto> findAll();
 
     void delete(Long id);
 
