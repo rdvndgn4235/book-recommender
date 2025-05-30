@@ -1,8 +1,13 @@
 package com.rd.userservice.exception;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
+
+@Setter
+@Getter
 public class ErrorResponse {
     private LocalDateTime timestamp;
     private int status;
@@ -15,6 +20,4 @@ public class ErrorResponse {
         this.error = httpStatus.getReasonPhrase();
         this.message = message;
     }
-
-    // getter - setter
 }
