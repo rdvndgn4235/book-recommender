@@ -2,6 +2,7 @@ package com.rd.bookservice.service;
 
 import com.rd.bookservice.dto.BookRequest;
 import com.rd.bookservice.dto.BookResponse;
+import com.rd.bookservice.exception.ResourceNotFoundException;
 import com.rd.bookservice.mapper.BookMapper;
 import com.rd.bookservice.model.Book;
 import com.rd.bookservice.repository.BookRepository;
@@ -50,7 +51,7 @@ public class BookService implements IBookService {
     @Override
     public BookResponse updateBook(Long id, BookRequest request) {
         Book book = bookRepository.findById(id)
-                                  .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+                                  .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
 
         book.setTitle(request.getTitle());
         book.setAuthor(request.getAuthor());
@@ -65,7 +66,7 @@ public class BookService implements IBookService {
     @Override
     public void deleteBook(Long id) {
         if (!bookRepository.existsById(id)) {
-            throw new RuntimeException("Book not found with id: " + id);
+            throw new ResourceNotFoundException("Book not found with id: " + id);
         }
         bookRepository.deleteById(id);
     }
