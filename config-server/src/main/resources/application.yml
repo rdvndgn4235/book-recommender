@@ -7,9 +7,10 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/rdvndgn4235/config-repo
+          uri: ${CONFIG_REPO_URL}
           default-label: main
           search-paths:
             - user-service
             - book-service
+          clone-on-start: true
       fail-fast: true
