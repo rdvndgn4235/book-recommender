@@ -1,0 +1,16 @@
+services:
+  config-server:
+    build:
+      context: .
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_REPO_URL=${CONFIG_REPO_URL}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
