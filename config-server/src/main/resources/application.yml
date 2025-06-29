@@ -7,7 +7,7 @@ spring:
     config:
       server:
         git:
-          uri: ${CONFIG_REPO_URL}
+          uri: https://github.com/rdvndgn4235/config-repo
           default-label: main
           search-paths:
             - user-service
