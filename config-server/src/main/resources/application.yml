@@ -12,5 +12,6 @@ spring:
           search-paths:
             - user-service
             - book-service
+            - eureka-server
           clone-on-start: true
       fail-fast: true
